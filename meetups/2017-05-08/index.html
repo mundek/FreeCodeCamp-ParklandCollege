@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>simple SPA</title>
+  <style>
+    html, body {
+      font-family: sans-serif;
+    }
+    nav {
+      position: fixed;
+      top: 0;
+      bottom: 0;
+      left: 0;
+      width: 20vw;
+      background-color: orange;
+    }
+    nav > ul {
+      list-style: none;
+      margin: 0;
+      padding: 0;
+    }
+    nav a {
+      text-decoration: none;
+      color: black;
+      text-transform: uppercase;
+      display: block;
+      text-align: center;
+      padding: 1em;
+      transition: 0.5s;
+    }
+    nav a:hover {
+      box-shadow: inset 0 0 12px 0 rgba(0,0,0,0.4);
+    }
+    .page-container {
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      right: 0;
+      width: 80vw;
+    }
+    .page {
+      position: absolute;
+      top: 0;
+      right: 0;
+      left: 0;
+      bottom: 0;
+      opacity: 0;
+      transition: opacity 0.5s;
+      z-index: -1;
+      font-size: 3em;
+      overflow: auto;
+    }
+    .page--active {
+      opacity: 1;
+      z-index: 0;
+    }
+
+  </style>
+</head>
+<body>
+  <nav>
+    <ul>
+      <li><a href="#/home/">Home</a></li>
+      <li><a href="#/about/">About</a></li>
+      <li><a href="#/contact/">Contact</a></li>
+    </ul>
+  </nav>
+  
+  <div class="page-container">
+    <section id="home" class="page page--active">this is the home page... there's no place like my home page</section>
+    <section id="about" class="page">here are a bunch of facts about me
+    Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</section>
+    <section id="contact" class="page">you can contact me @ blahblahblah.com</section>
+    <section id="notFound" class="page">we're sorry but can't find your page</section>
+  </div>
+  
+  <script>
+    (function() {
+      const pages = document.querySelectorAll('.page');
+      const notFound = document.querySelector('#notFound');
+      
+      function goto(pageId) {
+        let validPage = false;
+        
+        // remove page--active from current pageId
+        pages.forEach(function(page) {
+          page.classList.remove('page--active');
+          if (page.id === pageId) {
+            validPage = true;
+          }
+        });
+        
+        if (validPage) {
+          // add page--active to the new page
+          const newPage = document.querySelector("#" + pageId);
+          newPage.classList.add('page--active');
+        } else {
+          notFound.classList.add('page--active');
+        }
+      }
+      
+      window.addEventListener('hashchange', function() {
+        const page = window.location.hash.slice(2, -1);
+        goto(page);
+      });
+      
+      // initialize view
+      const page = window.location.hash.slice(2, -1);
+      if (page !== "") {
+        goto(page);
+      } else {
+        goto('home');
+      }
+    })();
+  </script>
+</body>
+</html>
